@@ -8,27 +8,81 @@ public class Main {
 	static String[] colour = { "red", "green", "blue" };
 	static String[] symbol = { "ovals", "squiggles", "diamonds" };
 	static String[] shading = { "solid", "open", "striped" };
+	static TestCode testCode = new TestCode();
 
 	public static void main(String... args) {
 		Card[] cards = spawnCards();
-
+		Card[] newCards = drawCards(cards, 12);
+		Arrays.asList(cards).forEach(i -> System.out.println(i != null ? i.getNumber() + " " + i.getColour() + " " + i.getSymbol() + " " + i.getShading() : i));
+		
+		for (int i = 0; i < 100; i++) {
+//		System.out.println(newCards.length);
+		testCode.checkForMatch(newCards);
+		}
+		
+		System.out.println("cards lenght: " +  (cards.length));
+		
+		cards = removeCards(cards, newCards);
+		
+		System.out.println("cards lenght: " +  (cards.length));
+		//System.out.println(cards.length);
+		
+//		testCode.checkTwoListForMatch(cards, newCards);
+		
+		//Arrays.asList(cards).forEach(i -> System.out.println(i != null ? i.getNumber() + " " + i.getColour() + " " + i.getSymbol() + " " + i.getShading() : i));
+		
+	}
+	
+	
+	public static int CardSizeAvaiable(Card[] list) {
+		 for (int i = 0; i < list.length; i++) {
+			 if (list[i] == null)
+				 return i;
+		 }
+		return -1;
 	}
 
-	public static Card[] removeCards() {
-		return null;
+	public static Card[] removeCards(Card[] cards, Card[] cardsToRemove) {
+		Card[] result = new Card[cards.length - cardsToRemove.length];
+		int count = 0;
+		for (Card i : cards) {
+			if (!isCardAvaiable(cardsToRemove, i)) {
+				result[CardSizeAvaiable(result)] = i;
+				System.out.println(CardSizeAvaiable(result));
+			}
+		}
+		
+		
+//		for (Card i : cardsToRemove) 
+//			if (isCardAvaiable(cards, i)) {
+//				result[CardSizeAvaiable(result)] = i;
+//			}
+		return result;
+	}
+	
+	public static boolean isCardAvaiable(Card[] cards, Card card) {
+		for (Card i : cards) {
+			if (i == card)
+			return true;
+		}
+		return false;
 	}
 
 	public static Card[] drawCards(Card[] cards, int cardsBeingDrawn) {
-		// get random number
-		int drawnCard = (int) (Math.random() * ((cards.length - 1) - 0 + 1) + 0);
 		// creates list for drawn cards.
 		Card[] cardDrawnList = new Card[cardsBeingDrawn];
 
-		for (int i = 0; i < cardsBeingDrawn + 1; i++) {
-			cardDrawnList[i] = cards[drawnCard];
+		//passes through a loop and get random card everytime if there isn't an item available it roll back to previous i 
+		for (int i = 0; i < cardsBeingDrawn; i++) {
+			// get random number
+			int drawnCard = (int) (Math.random() * ((cards.length - 1) - 0 + 1) + 0);
+			
+			if (isCardAvaiable(cards, cards[drawnCard])) 
+			cardDrawnList[i] = 	cards[drawnCard];
+			else 
+			i--;
 		}
-
-		return null;
+		return cardDrawnList;
 	}
 
 	// This method generates all the cards.
@@ -45,14 +99,12 @@ public class Main {
 		for (int i = 0; i < cards.length; i++) {
 			cards[i] = new Card();
 			cards[i].setNumber((counter % 3) + 1);
-			if (i == 26 || i == 53)
-				counter++;
+			if (i == 26 || i == 53) counter++;
 		}
 
 		// set colours in order of red, green blue
 		for (int i = 0; i < cards.length; i += 1) {
-			cards[i].setColour((colour[counter % 3]));
-			counter++;
+			cards[i].setColour((colour[(i % 3)]));
 
 		}
 
@@ -71,8 +123,7 @@ public class Main {
 		}
 
 		// prints all the items
-		Arrays.asList(cards).forEach(i -> System.out
-				.println(i.getNumber() + " " + i.getColour() + " " + i.getSymbol() + " " + i.getShading()));
+		//Arrays.asList(cards).forEach(i -> System.out.println(i.getNumber() + " " + i.getColour() + " " + i.getSymbol() + " " + i.getShading()));
 
 		return cards;
 	}
