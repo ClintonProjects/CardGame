@@ -10,21 +10,18 @@ public class Main {
 	static String[] shading = { "solid", "open", "striped" };
 	static TestCode testCode = new TestCode();
 
-	public static void main(String... args) {
+	public static void main(String... args) throws Exception {
 		Card[] cards = spawnCards();
-		Card[] newCards = drawCards(cards, 12);
+		Card[] currentCardsInPlay = drawCards(cards, 12);
 		Arrays.asList(cards).forEach(i -> System.out.println(i != null ? i.getNumber() + " " + i.getColour() + " " + i.getSymbol() + " " + i.getShading() : i));
 		
 		for (int i = 0; i < 100; i++) {
-//		System.out.println(newCards.length);
-		testCode.checkForMatch(newCards);
+		//This is just a test and can be removed
+		testCode.checkForMatch(currentCardsInPlay);
 		}
 		
-		System.out.println("cards lenght: " +  (cards.length));
+		cards = removeCards(cards, currentCardsInPlay);
 		
-		cards = removeCards(cards, newCards);
-		
-		System.out.println("cards lenght: " +  (cards.length));
 		//System.out.println(cards.length);
 		
 //		testCode.checkTwoListForMatch(cards, newCards);
@@ -33,33 +30,69 @@ public class Main {
 		
 	}
 	
+	public static boolean[] checkCardsOnBoradForMatch(Card[] onBoard) { 
+		boolean[] cardsMatch = new boolean[onBoard.length];
+		for (int i = 0; i < onBoard.length; i++) {
+			cardsMatch[i] = cardMatch(onBoard, onBoard[i]);
+		}
+		return cardsMatch;
+	}
 	
-	public static int CardSizeAvaiable(Card[] list) {
+	public static boolean cardMatch(Card[] cards, Card checkForMatch) {
+		boolean OneMatch = checkForMatch.getNumber() == 1;
+		boolean TwoMatch  = checkForMatch.getNumber() == 2; 
+		boolean threeMatch  = checkForMatch.getNumber() == 3;
+		
+		for (Card i : cards) {
+			if (i.getColour().equals(checkForMatch.getColour())
+			&& i.getShading().equals(checkForMatch.getShading())
+			&& i.getSymbol().equals(checkForMatch.getSymbol()) 
+			&& i.getNumber() != checkForMatch.getNumber()) {
+			if (OneMatch == false & i.getNumber() == 1)
+				OneMatch = true;
+			else if (threeMatch == false & i.getNumber() == 2)
+				TwoMatch = true;
+			else if (threeMatch == false & i.getNumber() == 3)
+				threeMatch = true;
+			}	
+		}
+		
+		return OneMatch && TwoMatch && threeMatch;
+		
+	}
+	
+	
+	
+	public static int CardSizeAvaiable(Card[] list) throws Exception {
 		 for (int i = 0; i < list.length; i++) {
 			 if (list[i] == null)
 				 return i;
 		 }
-		return -1;
+		throw new Exception("List Size error");
 	}
 
-	public static Card[] removeCards(Card[] cards, Card[] cardsToRemove) {
+	//removes a selected card from a deck.
+	public static Card[] removeCards(Card[] cards, Card[] cardsToRemove) throws Exception {
 		Card[] result = new Card[cards.length - cardsToRemove.length];
 		int count = 0;
-		for (Card i : cards) {
-			if (!isCardAvaiable(cardsToRemove, i)) {
+		for (Card i : cards) 
+			if (isCardAvaiable(cardsToRemove, i)) 
 				result[CardSizeAvaiable(result)] = i;
-				System.out.println(CardSizeAvaiable(result));
-			}
-		}
-		
-		
-//		for (Card i : cardsToRemove) 
-//			if (isCardAvaiable(cards, i)) {
-//				result[CardSizeAvaiable(result)] = i;
-//			}
 		return result;
 	}
 	
+	//Checks if a card is in deck of cards, returns -1 if item not in the list.
+	public static int isCardAvaiableReturnIndex(Card[] cards, Card card) {
+		for (int i = 0; i < cards.length; i++) {
+			if (cards[i] == card)
+			return i;
+		}
+		return -1;
+	}
+
+	
+	
+	//Checks if a card is in deck of cards
 	public static boolean isCardAvaiable(Card[] cards, Card card) {
 		for (Card i : cards) {
 			if (i == card)
