@@ -60,7 +60,4 @@ public class Card {
 		this.shading = shading;
 	}
 	
-	
-	
 }
-
