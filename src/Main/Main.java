@@ -15,28 +15,96 @@ public class Main {
 	static int k = 1;
 
 	public static void main(String... args) throws Exception {
+		playGame();
+	}
+
+	public static void playGame() throws Exception {
+		int points = 0;
 		Card[] cards = spawnCards();
-		//shuffle(cards);
+		System.out.println("All cards: " + cards.length);
+		// shuffle(cards);
 		Card[] cardsInhand = drawCards(cards, 12);
-		
-		// Arrays.asList(cards).forEach(i -> System.out.println(i != null ?
-		// i.getNumber() + " " + i.getColour() + " " + i.getSymbol() + " " +
-		// i.getShading() : i));
-		
-		for (int i = 0; i < 100; i++)
-			// This is just a test and can be removed, to lazy to load junits xD
-			testCode.checkForMatch(cardsInhand);
-		
 		cards = removeCards(cards, cardsInhand);
-		System.out.println("card length: " + cards.length);
-		
-		
 
-//		Arrays.asList(cards)
-//				.forEach(i -> System.out.println(i != null
-//						? k++ + "  " + i.getNumber() + " " + i.getColour() + " " + i.getSymbol() + " " + i.getShading()
-//						: k++ + " empty"));
+		Card[] CardPoints = checkForUnmatchesVerify(cardsInhand);
+		if (CardPoints.length > 0) {
+			cardsInhand = removeCards(cardsInhand, CardPoints);
+			points++;
+		} else {
+			cardsInhand = addCardsToHand(cardsInhand,drawCards(cards, 3));
+		}
+		System.out.println(cardsInhand.length);
+		System.out.println("Points: [" + points + "]");
+	}
+	
+	public static Card[] addCardsToHand(Card[] hand, Card[] addedToHand) {
+		Card[] cards = new Card[hand.length + addedToHand.length];
+		for (int i = 0; i < hand.length; i++) 
+			cards[i] = hand[i];
+		for (int i = 0; i < addedToHand.length; i++) 
+			cards[i + addedToHand.length] = hand[i];
+		return cards;
+	}
 
+	public static Card[] checkForUnmatchesVerify(Card[] cards) {
+		ArrayList<Card> list = new ArrayList<Card>();
+		for (Card i : cards) {
+			for (Card j : cards) {
+				if (i == j)
+					continue;
+				for (Card k : cards) {
+					if (i == k || k == j)
+						continue;
+					if (checkVerify(i, j, k) || checkUNVerify(i, j, k)) {
+						if (!list.contains(i) && !list.contains(j) && !list.contains(k)) {
+							list.add(i);
+							list.add(j);
+							list.add(k);
+							System.out.println(
+									i.getNumber() + " " + i.getColour() + " " + i.getSymbol() + " " + i.getShading());
+							System.out.println(
+									j.getNumber() + " " + j.getColour() + " " + j.getSymbol() + " " + j.getShading());
+							System.out.println(
+									k.getNumber() + " " + k.getColour() + " " + k.getSymbol() + " " + k.getShading());
+						}
+					}
+				}
+			}
+		}
+		Card[] arr = new Card[list.size()];
+		return list.toArray(arr);
+	}
+
+	public static boolean checkUNVerify(Card a, Card b, Card c) {
+		// checks no amount match
+		if (a.getNumber() != b.getNumber() && a.getNumber() != c.getNumber() && b.getNumber() != c.getNumber()) {
+			if (!a.getShading().equals(b.getShading()) && !a.getShading().equals(c.getShading())
+					&& !b.getShading().equals(c.getShading()))
+				if (!a.getColour().equals(b.getColour()) && !a.getColour().equals(c.getColour())
+						&& !b.getColour().equals(c.getColour()))
+					if (!a.getSymbol().equals(b.getSymbol()) && !a.getSymbol().equals(c.getSymbol())
+							&& !b.getSymbol().equals(c.getSymbol()))
+						return true;
+		}
+		return false;
+	}
+
+	public static boolean checkVerify(Card a, Card b, Card c) {
+		if (a.getNumber() == 1 && b.getNumber() == 2 && c.getNumber() == 3
+				|| a.getNumber() == 1 && b.getNumber() == 3 && c.getNumber() == 2
+				|| a.getNumber() == 2 && b.getNumber() == 1 && c.getNumber() == 3
+				|| a.getNumber() == 2 && b.getNumber() == 3 && c.getNumber() == 1
+				|| a.getNumber() == 3 && b.getNumber() == 1 && c.getNumber() == 2
+				|| a.getNumber() == 3 && b.getNumber() == 2 && c.getNumber() == 1)
+
+			if (a.getShading().equals(b.getShading()) && a.getShading().equals(c.getShading())
+					&& b.getShading().equals(c.getShading()))
+				if (a.getColour().equals(b.getColour()) && a.getColour().equals(c.getColour())
+						&& b.getColour().equals(c.getColour()))
+					if (a.getSymbol().equals(b.getSymbol()) && a.getSymbol().equals(c.getSymbol())
+							&& b.getSymbol().equals(c.getSymbol()))
+						return true;
+		return false;
 	}
 
 	public static Card[] shuffle(Card[] cards) {
@@ -55,9 +123,8 @@ public class Main {
 	}
 
 	public static boolean cardMatch(Card[] cards, Card checkForMatch) {
-		boolean OneMatch = checkForMatch.getNumber() == 1;
-		boolean TwoMatch = checkForMatch.getNumber() == 2;
-		boolean threeMatch = checkForMatch.getNumber() == 3;
+		boolean OneMatch = checkForMatch.getNumber() == 1, TwoMatch = checkForMatch.getNumber() == 2,
+				threeMatch = checkForMatch.getNumber() == 3;
 
 		for (Card i : cards) {
 			if (i.getColour().equals(checkForMatch.getColour()) && i.getShading().equals(checkForMatch.getShading())
@@ -116,8 +183,8 @@ public class Main {
 		// available it roll back to previous i
 		for (int i = 0; i < cardsBeingDrawn; i++) {
 			// get random number
-//			int drawnCard = (int) (Math.random() * ((cards.length - 1) - 0 + 1) + 0);
-			int drawnCard = i;
+			int drawnCard = (int) (Math.random() * ((cards.length - 1) - 0 + 1) + 0);
+//			int drawnCard = i;
 
 			if (isCardAvaiable(cards, cards[drawnCard]))
 				cardDrawnList[i] = cards[drawnCard];
@@ -133,9 +200,7 @@ public class Main {
 
 		int counter = 0;
 
-		/*
-		 * This code sets all items in table.
-		 */
+		// This code sets all items in table.
 		// creates a card, then sets every card to a number, so first 27 number will be
 		// 1, 2 till 54
 		for (int i = 0; i < cards.length; i++) {
@@ -146,10 +211,8 @@ public class Main {
 		}
 
 		// set colours in order of red, green blue
-		for (int i = 0; i < cards.length; i += 1) {
+		for (int i = 0; i < cards.length; i += 1)
 			cards[i].setColour((colour[(i % 3)]));
-
-		}
 
 		// sets items in 3s, so oval oval oval, squiggles, squiggles squiggles, etc
 		for (int i = 0; i < cards.length; i += 3) {
