@@ -1,5 +1,7 @@
 package Main;
 
+import Card.Card;
+
 public class TestCode {
 	
 	

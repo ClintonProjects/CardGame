@@ -1,4 +1,4 @@
-package Main;
+package Card;
 
 public class Card {
 	
