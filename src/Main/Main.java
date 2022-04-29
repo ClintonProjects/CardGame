@@ -22,26 +22,34 @@ public class Main {
 		int points = 0;
 		Card[] cards = spawnCards();
 		System.out.println("All cards: " + cards.length);
-		// shuffle(cards);
+		cards = shuffle(cards);
 		Card[] cardsInhand = drawCards(cards, 12);
 		cards = removeCards(cards, cardsInhand);
 
-//		while (cardsInhand.length != 0) {
-		Card[] CardPoints = checkForUnmatchesVerify(cardsInhand);
-		System.out.println("CardPoints: " + CardPoints.length);
-		if (CardPoints.length > 0) {
-			cardsInhand = removeCards(cardsInhand, CardPoints);
-			points++;
+		System.out.println("cardsToAdd: " + cardsInhand.length);
 
-		} else {
-			Card[] cardsToAdd = drawCards(cards, 3);
-//				System.out.println("cardsToAdd: " + cardsToAdd.length);
-			cards = removeCards(cards, cardsToAdd);
-			System.out.println(cards.length);
-//				cardsInhand = addCardsToHand(cardsInhand, cardsToAdd);
-		}
-		System.out.println("Points: [" + points + "]");
-//		};
+		while (cardsInhand.length != 0) {
+			System.out.println("cardsToAdd: " + cardsInhand.length);
+			Card[] CardPoints = checkForUnmatchesVerify(cardsInhand);
+//			System.out.println("CardPoints in hand: " + CardPoints.length);
+			if (CardPoints.length > 0) {
+				cardsInhand = removeCards(cardsInhand, CardPoints);
+				points++;
+			} else {
+				//System.out.println("cards.length " + cards.length);
+				if (cards.length == 3) {
+					points++;
+					break;
+				} else {
+				Card[] cardsToAdd = drawCards(cards, 3);
+				//System.out.println("cardsToAdd: " + cardsToAdd.length);
+				cards = removeCards(cards, cardsToAdd);
+				//System.out.println("cards.length: " + cards.length);
+				cardsInhand = addCardsToHand(cardsInhand, cardsToAdd);
+				}
+			}
+			System.out.println("Points: [" + points + "]");
+		};
 	}
 
 	public static Card[] addCardsToHand(Card[] hand, Card[] addedToHand) {
@@ -67,12 +75,6 @@ public class Main {
 							list.add(i);
 							list.add(j);
 							list.add(k);
-							System.out.println(
-									i.getNumber() + " " + i.getColour() + " " + i.getSymbol() + " " + i.getShading());
-							System.out.println(
-									j.getNumber() + " " + j.getColour() + " " + j.getSymbol() + " " + j.getShading());
-							System.out.println(
-									k.getNumber() + " " + k.getColour() + " " + k.getSymbol() + " " + k.getShading());
 						}
 					}
 				}
@@ -83,7 +85,8 @@ public class Main {
 	}
 
 	public static boolean checkUNVerify(Card a, Card b, Card c) {
-		System.out.println(a.getNumber() + " " + a.getColour() + " " + a.getSymbol() + " " + a.getShading());
+		// System.out.println(a.getNumber() + " " + a.getColour() + " " + a.getSymbol()
+		// + " " + a.getShading());
 		if (a == null || b == null || c == null)
 			return false;
 
@@ -101,7 +104,8 @@ public class Main {
 	}
 
 	public static boolean checkVerify(Card a, Card b, Card c) {
-		System.out.println(a.getNumber() + " " + a.getColour() + " " + a.getSymbol() + " " + a.getShading());
+		// System.out.println(a.getNumber() + " " + a.getColour() + " " + a.getSymbol()
+		// + " " + a.getShading());
 		if (a == null || b == null || c == null)
 			return false;
 
@@ -190,6 +194,9 @@ public class Main {
 	}
 
 	public static Card[] drawCards(Card[] cards, int cardsBeingDrawn) {
+		if (cards.length == 0) 
+			return null;
+		
 		// creates list for drawn cards.
 		Card[] cardDrawnList = new Card[cardsBeingDrawn];
 		// passes through a loop and get random card everytime if there isn't an item
