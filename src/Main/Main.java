@@ -26,22 +26,29 @@ public class Main {
 		Card[] cardsInhand = drawCards(cards, 12);
 		cards = removeCards(cards, cardsInhand);
 
+//		while (cardsInhand.length != 0) {
 		Card[] CardPoints = checkForUnmatchesVerify(cardsInhand);
+		System.out.println("CardPoints: " + CardPoints.length);
 		if (CardPoints.length > 0) {
 			cardsInhand = removeCards(cardsInhand, CardPoints);
 			points++;
+
 		} else {
-			cardsInhand = addCardsToHand(cardsInhand,drawCards(cards, 3));
+			Card[] cardsToAdd = drawCards(cards, 3);
+//				System.out.println("cardsToAdd: " + cardsToAdd.length);
+			cards = removeCards(cards, cardsToAdd);
+			System.out.println(cards.length);
+//				cardsInhand = addCardsToHand(cardsInhand, cardsToAdd);
 		}
-		System.out.println(cardsInhand.length);
 		System.out.println("Points: [" + points + "]");
+//		};
 	}
-	
+
 	public static Card[] addCardsToHand(Card[] hand, Card[] addedToHand) {
 		Card[] cards = new Card[hand.length + addedToHand.length];
-		for (int i = 0; i < hand.length; i++) 
+		for (int i = 0; i < hand.length; i++)
 			cards[i] = hand[i];
-		for (int i = 0; i < addedToHand.length; i++) 
+		for (int i = 0; i < addedToHand.length; i++)
 			cards[i + addedToHand.length] = hand[i];
 		return cards;
 	}
@@ -76,6 +83,10 @@ public class Main {
 	}
 
 	public static boolean checkUNVerify(Card a, Card b, Card c) {
+		System.out.println(a.getNumber() + " " + a.getColour() + " " + a.getSymbol() + " " + a.getShading());
+		if (a == null || b == null || c == null)
+			return false;
+
 		// checks no amount match
 		if (a.getNumber() != b.getNumber() && a.getNumber() != c.getNumber() && b.getNumber() != c.getNumber()) {
 			if (!a.getShading().equals(b.getShading()) && !a.getShading().equals(c.getShading())
@@ -90,13 +101,16 @@ public class Main {
 	}
 
 	public static boolean checkVerify(Card a, Card b, Card c) {
+		System.out.println(a.getNumber() + " " + a.getColour() + " " + a.getSymbol() + " " + a.getShading());
+		if (a == null || b == null || c == null)
+			return false;
+
 		if (a.getNumber() == 1 && b.getNumber() == 2 && c.getNumber() == 3
 				|| a.getNumber() == 1 && b.getNumber() == 3 && c.getNumber() == 2
 				|| a.getNumber() == 2 && b.getNumber() == 1 && c.getNumber() == 3
 				|| a.getNumber() == 2 && b.getNumber() == 3 && c.getNumber() == 1
 				|| a.getNumber() == 3 && b.getNumber() == 1 && c.getNumber() == 2
 				|| a.getNumber() == 3 && b.getNumber() == 2 && c.getNumber() == 1)
-
 			if (a.getShading().equals(b.getShading()) && a.getShading().equals(c.getShading())
 					&& b.getShading().equals(c.getShading()))
 				if (a.getColour().equals(b.getColour()) && a.getColour().equals(c.getColour())
@@ -178,7 +192,6 @@ public class Main {
 	public static Card[] drawCards(Card[] cards, int cardsBeingDrawn) {
 		// creates list for drawn cards.
 		Card[] cardDrawnList = new Card[cardsBeingDrawn];
-
 		// passes through a loop and get random card everytime if there isn't an item
 		// available it roll back to previous i
 		for (int i = 0; i < cardsBeingDrawn; i++) {
@@ -197,9 +210,7 @@ public class Main {
 	// This method generates all the cards.
 	public static Card[] spawnCards() {
 		Card[] cards = new Card[81];
-
 		int counter = 0;
-
 		// This code sets all items in table.
 		// creates a card, then sets every card to a number, so first 27 number will be
 		// 1, 2 till 54
@@ -209,29 +220,24 @@ public class Main {
 			if (i == 26 || i == 53)
 				counter++;
 		}
-
 		// set colours in order of red, green blue
 		for (int i = 0; i < cards.length; i += 1)
 			cards[i].setColour((colour[(i % 3)]));
-
 		// sets items in 3s, so oval oval oval, squiggles, squiggles squiggles, etc
 		for (int i = 0; i < cards.length; i += 3) {
 			for (int j = 0; j < 3; j++)
 				cards[i + j].setSymbol((symbol[counter % 3]));
 			counter++;
 		}
-
 		// sets items in 9s, refer to top example except 9s
 		for (int i = 0; i < cards.length; i += 9) {
 			for (int j = i; j < i + 9; j++)
 				cards[j].setShading((shading[counter % 3]));
 			counter++;
 		}
-
 		// prints all the items
 		// Arrays.asList(cards).forEach(i -> System.out.println(i.getNumber() + " " +
 		// i.getColour() + " " + i.getSymbol() + " " + i.getShading()));
-
 		return cards;
 	}
 }
