@@ -1,4 +1,4 @@
-package Card;
+package Main;
 
 import java.util.Arrays;
 import java.util.Collections;
@@ -13,6 +13,8 @@ public class DeckFunucations {
 		this.cards= cards;
 	}
 	
+
+	//shuffles the deck.
 	public Card[] shuffle() {
 		List<Card> list = Arrays.asList(cards);
 		Collections.shuffle(list, new Random());
@@ -20,6 +22,7 @@ public class DeckFunucations {
 		return list.toArray(arr);
 	}
 	
+	//allows the user to add a card to there hand
 	public  Card[] addCardsToHand(Card[] hand, Card[] addedToHand) {
 		cards = new Card[hand.length + addedToHand.length];
 		for (int i = 0; i < hand.length; i++)
@@ -31,6 +34,7 @@ public class DeckFunucations {
 	
 	
 	
+	//lets the user draw a card
 	public Card[] drawCards(Card[] cards, int cardsBeingDrawn) {
 		if (cards.length == 0) return null;
 
@@ -51,6 +55,7 @@ public class DeckFunucations {
 		return cardDrawnList;
 	}
 	
+	//Checks if there cards avaiable
 	public static int CardSizeAvaiable(Card[] list) throws Exception {
 		for (int i = 0; i < list.length; i++)
 			if (list[i] == null) return i;

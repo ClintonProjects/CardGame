@@ -1,18 +1,6 @@
-package Card;
+package Main;
 
 public class Card {
-	
-//	enum COLOUR {
-//		Red, Green, Blue
-//	}
-//	
-//	enum SYMBOL {
-//		OVALS, SQUIGGLES, DIAMONDS
-//	}
-//	
-//	enum SHADING {
-//		 Solid, Open, Striped
-//	}
 	
 	private String colour;
 	private String symbol;
